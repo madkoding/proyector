@@ -50,7 +50,7 @@ Optimizaciones persistentes para proyector Philco H300P (Android 13, 1 GB RAM, r
 - `optimize-t950s.sh` — aplica optimizaciones en caliente (memoria, CPU, térmica, I/O)
 - `setup-proyector.sh` — one-shot completo tras flasheo (deshabilita bloatware, limpia malware, instala optimizaciones, configura ChillHub + OpenEQ al boot)
 
-Persistencia vía `/data/ttyunos/ttyunos.sh` (servicio init ejecuta optimizaciones y lanza ChillHub + OpenEQ en cada boot).
+Persistencia vía `/data/ttyunos/ttyunos.sh` (servicio init ejecuta optimizaciones y lanza ChillHub en cada boot).
 
 ## Apps instaladas
 
@@ -58,7 +58,7 @@ Persistencia vía `/data/ttyunos/ttyunos.sh` (servicio init ejecuta optimizacion
 |-----|---------|
 | ChillHub | `app.lumoslabs.chillhub` |
 | Steam Link | `com.valvesoftware.steamlink` |
-| OpenEQ (ecualizador) | `com.turbofan3360.openeq` |
+
 | SmartTube | `com.google.android.youtube.tv` |
 | NewPipe | (F-Droid) |
 | VLC / Kodi / Jellyfin | (F-Droid) |
