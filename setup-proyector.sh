@@ -109,16 +109,24 @@ cat > /data/ttyunos/ttyunos.sh << 'EOF'
 # Apply system optimizations at boot
 su 0 sh /data/local/tmp/optimize-t950s.sh
 
+# Fix build fingerprint to Android 13 (stock spoofed as Android 12)
+su 0 /data/adb/magisk/magisk resetprop ro.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
+su 0 /data/adb/magisk/magisk resetprop ro.system.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
+su 0 /data/adb/magisk/magisk resetprop ro.vendor.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
+su 0 /data/adb/magisk/magisk resetprop ro.odm.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
+su 0 /data/adb/magisk/magisk resetprop ro.system_ext.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
+su 0 /data/adb/magisk/magisk resetprop ro.bootimage.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
+su 0 /data/adb/magisk/magisk resetprop ro.product.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
+su 0 /data/adb/magisk/magisk resetprop ro.odm_dlkm.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
+su 0 /data/adb/magisk/magisk resetprop ro.system_dlkm.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
+su 0 /data/adb/magisk/magisk resetprop ro.vendor_dlkm.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
+
 # Launch ChillHub as home (Android does not auto-switch from FallbackHome on this build)
 sleep 8
 am force-stop com.android.tv.settings
 am start -a android.intent.action.MAIN -c android.intent.category.HOME
 sleep 2
 am start -n app.lumoslabs.chillhub/.LauncherActivity
-
-# Launch OpenEQ equalizer at boot (preset: bass boost + mids + lowered treble)
-sleep 3
-am start -n com.turbofan3360.openeq/.MainActivity
 EOF
 chmod 755 /data/ttyunos/ttyunos.sh
 

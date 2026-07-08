@@ -42,15 +42,16 @@ Optimizaciones persistentes para proyector Philco H300P (Android 13, 1 GB RAM, r
 | LMKD | stock | Configurado | Kill thresholds ajustados |
 | Bloatware | 15 paquetes activos | Deshabilitados | GMS, Play Store, Katniss, etc. |
 | Boot malware | Descargaba scripts remotos | Limpio | ttyunos.sh/v9ying.sh sanitizados |
+| Build fingerprint | `redfin:12/SP1A.210812.015` (Android 12) | `redfin:13/TQ2A.230405.003.E1` (Android 13) | Stock spoofeaba como Android 12; Google Play detectaba 11/12. Fix via `magisk resetprop` en boot |
 | Temp típica | ~68 °C | ~60 °C | −8 °C |
 | Mem Available | ~309 MB | variable (~473 MB pico post-limpieza) | |
 
 ## Scripts
 
 - `optimize-t950s.sh` — aplica optimizaciones en caliente (memoria, CPU, térmica, I/O)
-- `setup-proyector.sh` — one-shot completo tras flasheo (deshabilita bloatware, limpia malware, instala optimizaciones, configura ChillHub + OpenEQ al boot)
+- `setup-proyector.sh` — one-shot completo tras flasheo (deshabilita bloatware, limpia malware, instala optimizaciones, configura ChillHub al boot, fix fingerprint Android 13)
 
-Persistencia vía `/data/ttyunos/ttyunos.sh` (servicio init ejecuta optimizaciones y lanza ChillHub en cada boot).
+Persistencia vía `/data/ttyunos/ttyunos.sh` (servicio init ejecuta optimizaciones, fix fingerprint, y lanza ChillHub en cada boot).
 
 ## Apps instaladas
 
