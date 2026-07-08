@@ -2,6 +2,8 @@
 
 Persistent optimizations for the Philco H300P projector (Android 13, 1 GB RAM, userdebug root, passive cooling).
 
+Firmware: [archive.org/details/proyector-firmware-hy-300-h-300-p](https://archive.org/details/proyector-firmware-hy-300-h-300-p)
+
 ## Stock vs current settings
 
 | Parameter | Stock | Current | What changed |
