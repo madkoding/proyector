@@ -79,3 +79,4 @@ Persistence via `/data/ttyunos/ttyunos.sh` (init service runs optimizations, fin
 - **Persistence without Magisk**: the `ttyunos` init service runs `/data/ttyunos/ttyunos.sh` at boot when `sys.jm.ttyunos=1`.
 - **Build fingerprint**: stock spoofed as Pixel 5 (redfin) Android 12. Corrected to Android 13 via `magisk resetprop` at every boot.
 - **Passive cooling**: no fan, thermal throttling only via CPU/GPU/DDR trip points.
+- **ChillHub patched APK**: `chillhub-1.2.3-hardware-accel-false.apk` — stock ChillHub has `android:hardwareAccelerated="true"` in the manifest, which causes `allocateHardwareBitmap()` failures on the Mali-450 GPU (gralloc doesn't support `AHARDWAREBUFFER_USAGE_GPU_SAMPLE_BUFFER_IMAGE` / usage 0x100). Symptoms: theme thumbnails and "Continue Watching" thumbnails render as black or crash the surface. Patch sets `hardwareAccelerated="false"` to force software bitmap rendering. Re-signed with a debug key.
