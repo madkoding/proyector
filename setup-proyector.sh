@@ -30,13 +30,13 @@ mkswap /dev/block/zram0
 swapon /dev/block/zram0
 
 echo 100 > /proc/sys/vm/swappiness
-echo 30 > /proc/sys/vm/watermark_scale_factor
+echo 40 > /proc/sys/vm/watermark_scale_factor
 echo 1000 > /proc/sys/vm/watermark_boost_factor
 echo 10 > /proc/sys/vm/dirty_ratio
 echo 3 > /proc/sys/vm/dirty_background_ratio
 echo 50 > /proc/sys/vm/vfs_cache_pressure
 
-setprop sys.lmk.minfree_levels "24576:0,30720:100,36864:200,40960:250,61440:900,81920:950"
+setprop sys.lmk.minfree_levels "18432:0,30720:100,36864:200,40960:250,61440:900,81920:950"
 
 echo 70000 > /sys/class/thermal/thermal_zone0/trip_point_0_temp
 echo 80000 > /sys/class/thermal/thermal_zone0/trip_point_1_temp
@@ -51,11 +51,16 @@ echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/io_is_busy
 echo 512 > /sys/block/mmcblk0/queue/read_ahead_kb
 
 echo 0 > /proc/sys/kernel/sched_energy_aware
+
+echo 1000000 > /proc/sys/kernel/sched_rt_runtime_us
+
+echo NO_GENTLE_FAIR_SLEEPERS > /sys/kernel/debug/sched/features
 '
 settings put global window_animation_scale 0.5
 settings put global transition_animation_scale 0.5
 settings put global animator_duration_scale 0.5
 settings put global stay_on_while_plugged_in 3
+settings put global activity_manager_constants_max_cached_processes 24
 OPT
 chmod 755 /data/local/tmp/optimize-t950s.sh
 echo "Done: optimize-t950s.sh installed"

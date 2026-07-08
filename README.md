@@ -19,11 +19,14 @@ Optimizaciones persistentes para proyector Philco H300P (Android 13, 1 GB RAM, r
 | read_ahead_kb | 128 KB | 512 KB | 4× más datos leídos adelantados |
 | **VM** | | | |
 | swappiness | 60 (default Android) | 100 | Swap más agresivo |
-| watermark_scale | 10 | 30 | Memory reclaim más temprano |
+| watermark_scale | 10 | 40 | kswapd más gradual (reduce picos de carga durante video) |
 | watermark_boost | 0 | 1000 | Boost tras wakeup |
 | dirty_ratio | 20 | 10 | Menos writeback sucio antes de flush |
 | dirty_background_ratio | 10 | 3 | Flush async empieza antes |
 | vfs_cache_pressure | 100 | 50 | Retiene más cache de ficheros |
+| sched_rt_runtime_us | 950000 | 1000000 | Sin throttle RT, input dispatcher no se estanca |
+| GENTLE_FAIR_SLEEPERS | activo | desactivado | Input reader mantiene prioridad al despertar |
+| max_cached_processes | default | 24 | Menos apps en RAM, reduce swap durante video |
 | **ZRAM** | | | |
 | algoritmo | lz4 | zstd | Mejor compresión (~2× ratio) |
 | disksize | ~512 MB | 1.5 GB | Más swap comprimido |
@@ -39,7 +42,7 @@ Optimizaciones persistentes para proyector Philco H300P (Android 13, 1 GB RAM, r
 | animator_duration_scale | 1.0 | 0.5 | 2× más rápido |
 | **Otros** | | | |
 | stay_on_while_plugged_in | 0 | 3 (AC+USB) | No duerme mientras enchufado |
-| LMKD | stock | Configurado | Kill thresholds ajustados |
+| LMKD | stock | Configurado | Kill thresholds ajustados (primer threshold 72 MB, más agresivo) |
 | Bloatware | 15 paquetes activos | Deshabilitados | GMS, Play Store, Katniss, etc. |
 | Boot malware | Descargaba scripts remotos | Limpio | ttyunos.sh/v9ying.sh sanitizados |
 | Build fingerprint | `redfin:12/SP1A.210812.015` (Android 12) | `redfin:13/TQ2A.230405.003.E1` (Android 13) | Stock spoofeaba como Android 12; Google Play detectaba 11/12. Fix via `magisk resetprop` en boot |
