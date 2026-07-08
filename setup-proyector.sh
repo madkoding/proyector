@@ -4,21 +4,23 @@
 # Usage: adb shell su 0 sh /data/local/tmp/setup-proyector.sh
 #
 # What this does:
-#   1. Installs optimizations (memory, CPU, thermal) and makes them persist via boot script
+#   1. Installs optimizations (memory, CPU, thermal, scheduler) and makes them persist via boot script
 #   2. Disables bloatware (GMS, Play Store, Google Assistant, Chinese apps)
 #   3. Cleans malware from boot scripts (ttyunos.sh, v9ying.sh download remote code)
 #   4. Re-enables useful system apps (tcorrection, jiumao, droidlogic)
-#   5. Sets up ChillHub launcher as default home
-#   6. Creates boot script that reapplies optimizations + launches ChillHub on every boot
+#   5. Installs patched ChillHub (Bitmap.Config fix for Mali-450 GPU)
+#   6. Sets up ChillHub launcher as default home
+#   7. Applies optimizations now + creates boot script for persistence
 #
 # Prerequisites:
 #   - Root access (su 0 works — this build is userdebug)
-#   - ChillHub APK installed: adb install chillhub.apk
 #   - ADB connected: adb connect <proyector-ip>
+#   - Push ChillHub patched APK first:
+#       adb push chillhub-1.2.3-bitmap-argb8888.apk /data/local/tmp/
 
 set -e
 
-echo "=== [1/6] Installing optimization script ==="
+echo "=== [1/7] Installing optimization script ==="
 cat > /data/local/tmp/optimize-t950s.sh << 'OPT'
 #!/system/bin/sh
 su 0 sh -c '
@@ -65,7 +67,7 @@ OPT
 chmod 755 /data/local/tmp/optimize-t950s.sh
 echo "Done: optimize-t950s.sh installed"
 
-echo "=== [2/6] Disabling bloatware ==="
+echo "=== [2/7] Disabling bloatware ==="
 for pkg in \
   com.google.android.gms \
   com.google.android.katniss \
@@ -92,7 +94,7 @@ for pkg in \
 done
 echo "Done: bloatware disabled"
 
-echo "=== [3/6] Re-enabling useful system apps ==="
+echo "=== [3/7] Re-enabling useful system apps ==="
 for pkg in \
   com.softwinner.tcorrection \
   com.jiumao.projection \
@@ -104,7 +106,7 @@ for pkg in \
 done
 echo "Done: useful apps enabled"
 
-echo "=== [4/6] Cleaning malware from boot scripts ==="
+echo "=== [4/7] Cleaning malware from boot scripts ==="
 # Original malware: ttyunos.sh and v9ying.sh download+execute remote scripts
 # from jm.v7ying.com / jm.v9ying.com / 123.207.77.74 on every boot
 mkdir -p /data/ttyunos
@@ -148,13 +150,22 @@ EOF
 chmod 755 /data/ttyunos/custom.sh
 echo "Done: malware cleaned from boot scripts"
 
-echo "=== [5/6] Setting ChillHub as default home ==="
+echo "=== [5/7] Installing ChillHub (patched for Mali-450) ==="
+if [ -f /data/local/tmp/chillhub-1.2.3-bitmap-argb8888.apk ]; then
+  pm uninstall app.lumoslabs.chillhub 2>/dev/null
+  pm install /data/local/tmp/chillhub-1.2.3-bitmap-argb8888.apk && echo "  installed: ChillHub patched" || echo "  ERROR: failed to install ChillHub"
+else
+  echo "  WARNING: chillhub-1.2.3-bitmap-argb8888.apk not found in /data/local/tmp/"
+  echo "  Push it first: adb push chillhub-1.2.3-bitmap-argb8888.apk /data/local/tmp/"
+fi
+
+echo "=== [6/7] Setting ChillHub as default home ==="
 pm enable app.lumoslabs.chillhub 2>/dev/null
 cmd package set-home-activity app.lumoslabs.chillhub/.LauncherActivity 2>/dev/null
 am start -n app.lumoslabs.chillhub/.LauncherActivity 2>/dev/null
 echo "Done: ChillHub set as home"
 
-echo "=== [6/6] Applying optimizations now ==="
+echo "=== [7/7] Applying optimizations now ==="
 sh /data/local/tmp/optimize-t950s.sh
 echo "Done: optimizations applied"
 
@@ -165,5 +176,6 @@ echo "  adb reboot"
 echo ""
 echo "After reboot, optimizations + ChillHub launch automatically."
 echo "To re-run this script after a firmware reflash:"
+echo "  adb push chillhub-1.2.3-bitmap-argb8888.apk /data/local/tmp/"
 echo "  adb push setup-proyector.sh /data/local/tmp/"
 echo "  adb shell su 0 sh /data/local/tmp/setup-proyector.sh"
