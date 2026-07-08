@@ -54,9 +54,44 @@ Firmware: [archive.org/details/proyector-firmware-hy-300-h-300-p](https://archiv
 ## Scripts
 
 - `optimize-t950s.sh` — applies optimizations live (memory, CPU, thermal, I/O, scheduler, RT)
-- `setup-proyector.sh` — full one-shot setup after firmware flash (disables bloatware, cleans malware, installs optimizations, configures ChillHub at boot, fixes fingerprint to Android 13)
+- `setup-proyector.sh` — full one-shot setup after firmware flash (disables bloatware, cleans malware, installs optimizations, installs patched ChillHub, fixes fingerprint to Android 13)
 
 Persistence via `/data/ttyunos/ttyunos.sh` (init service runs optimizations, fingerprint fix, and launches ChillHub on every boot).
+
+## Setup after firmware flash
+
+1. Flash firmware with Amlogic USB Burning Tool (see [archive.org link](https://archive.org/details/proyector-firmware-hy-300-h-300-p))
+2. Connect the projector to your network (WiFi or Ethernet) and find its IP address
+3. Enable ADB on the projector (Settings → Developer options → ADB debugging)
+4. From your computer, connect to the projector via ADB:
+
+   ```bash
+   adb connect <PROYECTOR_IP>
+   ```
+
+5. Push the patched ChillHub APK and setup script to the device:
+
+   ```bash
+   adb push chillhub-1.2.3-bitmap-argb8888.apk /data/local/tmp/
+   adb push setup-proyector.sh /data/local/tmp/
+   adb push optimize-t950s.sh /data/local/tmp/
+   ```
+
+6. Run the setup script with root:
+
+   ```bash
+   adb shell su 0 sh /data/local/tmp/setup-proyector.sh
+   ```
+
+7. Reboot to verify everything works automatically:
+
+   ```bash
+   adb reboot
+   ```
+
+After reboot, optimizations, fingerprint fix, and ChillHub launch automatically.
+
+**Note**: Replace `<PROYECTOR_IP>` with the actual IP address of the projector on your network (e.g. `192.168.1.100`). The scripts do not hardcode any IP — you must provide it when connecting via ADB.
 
 ## Installed apps
 
