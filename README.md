@@ -54,9 +54,9 @@ Firmware: [archive.org/details/proyector-firmware-hy-300-h-300-p](https://archiv
 ## Scripts
 
 - `optimize-t950s.sh` — applies optimizations live (memory, CPU, thermal, I/O, scheduler, RT)
-- `setup-proyector.sh` — full one-shot setup after firmware flash (disables bloatware, cleans malware, installs optimizations, installs patched ChillHub, fixes fingerprint to Android 13)
+- `setup-proyector.sh` — full one-shot setup after firmware flash (disables bloatware, cleans malware, installs optimizations, installs Monet Launcher, fixes fingerprint to Android 13)
 
-Persistence via `/data/ttyunos/ttyunos.sh` (init service runs optimizations, fingerprint fix, and launches ChillHub on every boot).
+Persistence via `/data/ttyunos/ttyunos.sh` (init service runs optimizations, fingerprint fix, enables Monet notification listener, and launches Monet on every boot).
 
 ## Setup after firmware flash
 
@@ -69,10 +69,10 @@ Persistence via `/data/ttyunos/ttyunos.sh` (init service runs optimizations, fin
    adb connect <PROYECTOR_IP>
    ```
 
-5. Push the patched ChillHub APK and setup script to the device:
+5. Push the Monet Launcher APK and setup scripts to the device:
 
    ```bash
-   adb push chillhub-1.2.3-bitmap-argb8888.apk /data/local/tmp/
+   adb push monet-1.0.58.apk /data/local/tmp/
    adb push setup-proyector.sh /data/local/tmp/
    adb push optimize-t950s.sh /data/local/tmp/
    ```
@@ -97,7 +97,8 @@ After reboot, optimizations, fingerprint fix, and ChillHub launch automatically.
 
 | App | Package |
 |-----|---------|
-| ChillHub (launcher) | `app.lumoslabs.chillhub` |
+| ChillHub (launcher, patched) | `app.lumoslabs.chillhub` |
+| Monet Launcher (launcher, current) | `com.klevico.monet` |
 | Steam Link | `com.valvesoftware.steamlink` |
 | SmartTube | `com.google.android.youtube.tv` |
 | NewPipe | (F-Droid) |
@@ -114,4 +115,4 @@ After reboot, optimizations, fingerprint fix, and ChillHub launch automatically.
 - **Persistence without Magisk**: the `ttyunos` init service runs `/data/ttyunos/ttyunos.sh` at boot when `sys.jm.ttyunos=1`.
 - **Build fingerprint**: stock spoofed as Pixel 5 (redfin) Android 12. Corrected to Android 13 via `magisk resetprop` at every boot.
 - **Passive cooling**: no fan, thermal throttling only via CPU/GPU/DDR trip points.
-- **ChillHub patched APK**: `chillhub-1.2.3-bitmap-argb8888.apk` — the Mali-450 GPU's gralloc doesn't support `AHardwareBuffer_allocate` with usage 0x100 (`GPU_SAMPLE_BUFFER_IMAGE`), causing `allocateHardwareBitmap()` failures. Coil3 (image loader) requests `Bitmap.Config.HARDWARE` which triggers this path, making theme thumbnails and "Continue Watching" thumbnails render as black or crash the surface. Patch changes the smali to return `Bitmap.Config.ARGB_8888` instead, keeping hardware acceleration for everything else. Re-signed with a debug key.
+- **ChillHub patched APK**: `chillhub-1.2.3-bitmap-argb8888.apk` — the Mali-450 GPU's gralloc doesn't support `AHardwareBuffer_allocate` with usage 0x100 (`GPU_SAMPLE_BUFFER_IMAGE`), causing `allocateHardwareBitmap()` failures. Coil3 (image loader) requests `Bitmap.Config.HARDWARE` which triggers this path, making theme thumbnails and "Continue Watching" thumbnails render as black or crash the surface. Patch changes the smali to return `Bitmap.Config.ARGB_8888` instead, keeping hardware acceleration for everything else. Re-signed with a debug key. **Note**: ChillHub has been replaced by Monet Launcher as the active launcher. The patched APK is kept for reference.

@@ -8,8 +8,8 @@
 #   2. Disables bloatware (GMS, Play Store, Google Assistant, Chinese apps)
 #   3. Cleans malware from boot scripts (ttyunos.sh, v9ying.sh download remote code)
 #   4. Re-enables useful system apps (tcorrection, jiumao, droidlogic)
-#   5. Installs patched ChillHub (Bitmap.Config fix for Mali-450 GPU)
-#   6. Sets up ChillHub launcher as default home
+#   5. Installs Monet Launcher (no patching needed — works on Mali-450 out of the box)
+#   6. Sets up Monet as default home + enables notification listener
 #   7. Applies optimizations now + creates boot script for persistence
 #
 # Prerequisites:
@@ -128,12 +128,15 @@ su 0 /data/adb/magisk/magisk resetprop ro.odm_dlkm.build.fingerprint "google/red
 su 0 /data/adb/magisk/magisk resetprop ro.system_dlkm.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
 su 0 /data/adb/magisk/magisk resetprop ro.vendor_dlkm.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
 
-# Launch ChillHub as home (Android does not auto-switch from FallbackHome on this build)
+# Enable Monet notification listener
+settings put secure enabled_notification_listeners "com.google.android.tvrecommendations/.NotificationsService:com.klevico.monet/.LauncherNotificationListenerService"
+
+# Launch Monet as home (Android does not auto-switch from FallbackHome on this build)
 sleep 8
 am force-stop com.android.tv.settings
 am start -a android.intent.action.MAIN -c android.intent.category.HOME
 sleep 2
-am start -n app.lumoslabs.chillhub/.LauncherActivity
+am start -n com.klevico.monet/.HomeActivity
 EOF
 chmod 755 /data/ttyunos/ttyunos.sh
 
@@ -150,20 +153,25 @@ EOF
 chmod 755 /data/ttyunos/custom.sh
 echo "Done: malware cleaned from boot scripts"
 
-echo "=== [5/7] Installing ChillHub (patched for Mali-450) ==="
-if [ -f /data/local/tmp/chillhub-1.2.3-bitmap-argb8888.apk ]; then
-  pm uninstall app.lumoslabs.chillhub 2>/dev/null
-  pm install /data/local/tmp/chillhub-1.2.3-bitmap-argb8888.apk && echo "  installed: ChillHub patched" || echo "  ERROR: failed to install ChillHub"
+echo "=== [5/7] Installing Monet Launcher ==="
+if [ ! -f /data/local/tmp/monet-1.0.58.apk ]; then
+  echo "  Downloading monet-1.0.58.apk..."
+  curl -sL -o /data/local/tmp/monet-1.0.58.apk "https://github.com/Klevico/Monet-Launcher/releases/download/v1.0.58/monet-1.0.58.apk"
+fi
+if [ -f /data/local/tmp/monet-1.0.58.apk ]; then
+  pm uninstall com.klevico.monet 2>/dev/null
+  pm install /data/local/tmp/monet-1.0.58.apk && echo "  installed: Monet Launcher" || echo "  ERROR: failed to install Monet"
 else
-  echo "  WARNING: chillhub-1.2.3-bitmap-argb8888.apk not found in /data/local/tmp/"
-  echo "  Push it first: adb push chillhub-1.2.3-bitmap-argb8888.apk /data/local/tmp/"
+  echo "  WARNING: monet-1.0.58.apk not found, push it first:"
+  echo "    adb push monet-1.0.58.apk /data/local/tmp/"
 fi
 
-echo "=== [6/7] Setting ChillHub as default home ==="
-pm enable app.lumoslabs.chillhub 2>/dev/null
-cmd package set-home-activity app.lumoslabs.chillhub/.LauncherActivity 2>/dev/null
-am start -n app.lumoslabs.chillhub/.LauncherActivity 2>/dev/null
-echo "Done: ChillHub set as home"
+echo "=== [6/7] Setting Monet as default home ==="
+pm enable com.klevico.monet 2>/dev/null
+cmd package set-home-activity com.klevico.monet/.HomeActivity 2>/dev/null
+settings put secure enabled_notification_listeners "com.google.android.tvrecommendations/.NotificationsService:com.klevico.monet/.LauncherNotificationListenerService"
+am start -n com.klevico.monet/.HomeActivity 2>/dev/null
+echo "Done: Monet set as home"
 
 echo "=== [7/7] Applying optimizations now ==="
 sh /data/local/tmp/optimize-t950s.sh
@@ -174,8 +182,9 @@ echo "=== SETUP COMPLETE ==="
 echo "Reboot to verify everything works automatically:"
 echo "  adb reboot"
 echo ""
-echo "After reboot, optimizations + ChillHub launch automatically."
+echo "After reboot, optimizations + Monet launch automatically."
 echo "To re-run this script after a firmware reflash:"
-echo "  adb push chillhub-1.2.3-bitmap-argb8888.apk /data/local/tmp/"
+echo "  adb push monet-1.0.58.apk /data/local/tmp/"
 echo "  adb push setup-proyector.sh /data/local/tmp/"
+echo "  adb push optimize-t950s.sh /data/local/tmp/"
 echo "  adb shell su 0 sh /data/local/tmp/setup-proyector.sh"
