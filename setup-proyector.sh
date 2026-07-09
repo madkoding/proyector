@@ -124,7 +124,6 @@ for pkg in \
   com.google.android.tvrecommendations \
   com.google.android.katniss \
   com.google.android.partnersetup \
-  com.amazon.amazonvideo.livingroom \
   com.netflix.mediaclient \
   com.master.tv.market \
   com.overseas.store.appstore \
