@@ -116,6 +116,26 @@ cat > /data/ttyunos/ttyunos.sh << 'EOF'
 # Apply system optimizations at boot
 su 0 sh /data/local/tmp/optimize-t950s.sh
 
+# Disable bloatware on every boot (pm disable-user does not persist without Magisk)
+for pkg in \
+  com.google.android.gms \
+  com.android.vending \
+  com.google.android.syncadapters.contacts \
+  com.google.android.tvrecommendations \
+  com.google.android.katniss \
+  com.google.android.partnersetup \
+  com.amazon.amazonvideo.livingroom \
+  com.netflix.mediaclient \
+  com.master.tv.market \
+  com.overseas.store.appstore \
+  com.android.mgstv \
+  com.android.chrome \
+  com.mxtech.videoplayer.ad \
+  com.ht1.launcher \
+; do
+  pm disable-user --user 0 $pkg 2>/dev/null
+done
+
 # Fix build fingerprint to Android 13 (stock spoofed as Android 12)
 su 0 /data/adb/magisk/magisk resetprop ro.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
 su 0 /data/adb/magisk/magisk resetprop ro.system.build.fingerprint "google/redfin/redfin:13/TQ2A.230405.003.E1/7679548:user/release-keys"
