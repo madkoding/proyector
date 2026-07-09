@@ -84,7 +84,6 @@ for pkg in \
   com.master.tv.market \
   com.overseas.store.appstore \
   com.android.mgstv \
-  com.amazon.avod.thirdpartyclient \
   com.mxtech.videoplayer.ad \
   com.android.chrome \
   com.netflix.mediaclient \
@@ -149,6 +148,10 @@ su 0 /data/adb/magisk/magisk resetprop ro.vendor_dlkm.build.fingerprint "google/
 
 # Enable Monet notification listener
 settings put secure enabled_notification_listeners "com.google.android.tvrecommendations/.NotificationsService:com.klevico.monet/.LauncherNotificationListenerService"
+
+# No background apps: kill activities immediately, no cached processes
+settings put global activity_manager_constants_max_cached_processes 0
+settings put global always_finish_activities 1
 
 # Launch Monet as home (Android does not auto-switch from FallbackHome on this build)
 sleep 8

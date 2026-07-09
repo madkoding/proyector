@@ -52,4 +52,5 @@ settings put global window_animation_scale 0.5
 settings put global transition_animation_scale 0.5
 settings put global animator_duration_scale 0.5
 settings put global stay_on_while_plugged_in 3
-settings put global activity_manager_constants_max_cached_processes 24
+settings put global activity_manager_constants_max_cached_processes 0
+settings put global always_finish_activities 1
