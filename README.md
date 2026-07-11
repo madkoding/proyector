@@ -28,7 +28,7 @@ Firmware: [archive.org/details/proyector-firmware-hy-300-h-300-p](https://archiv
 | vfs_cache_pressure | 100 | 50 | Retains more file cache |
 | **ZRAM** | | | |
 | algorithm | lz4 | zstd | Better compression (~2× ratio) |
-| disksize | ~512 MB | 1.5 GB | More compressed swap |
+| disksize | ~512 MB | 1 GB | More compressed swap (1× RAM, avoids thrashing on 1 GB) |
 | **Thermal** | | | |
 | trip_0 (passive) | 95 °C | 70 °C | Throttle starts earlier |
 | trip_1 (passive) | 105 °C | 80 °C | Second step earlier |

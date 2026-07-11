@@ -27,7 +27,7 @@ su 0 sh -c '
 swapoff /dev/block/zram0 2>/dev/null
 echo 1 > /sys/block/zram0/reset
 echo zstd > /sys/block/zram0/comp_algorithm
-echo 1610612736 > /sys/block/zram0/disksize
+echo 1073741824 > /sys/block/zram0/disksize
 mkswap /dev/block/zram0
 swapon /dev/block/zram0
 
