@@ -15,8 +15,8 @@
 # Prerequisites:
 #   - Root access (su 0 works — this build is userdebug)
 #   - ADB connected: adb connect <proyector-ip>
-#   - Push ChillHub patched APK first:
-#       adb push chillhub-1.2.3-bitmap-argb8888.apk /data/local/tmp/
+#   - Push Monet Launcher APK first:
+#       adb push monet-1.0.58.apk /data/local/tmp/
 
 set -e
 
