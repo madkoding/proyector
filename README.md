@@ -114,3 +114,6 @@ After reboot, optimizations, fingerprint fix, and Monet launch automatically.
 - **Persistence without Magisk**: the `ttyunos` init service runs `/data/ttyunos/ttyunos.sh` at boot when `sys.jm.ttyunos=1`.
 - **Build fingerprint**: stock spoofed as Pixel 5 (redfin) Android 12. Corrected to Android 13 via `magisk resetprop` at every boot.
 - **Passive cooling**: no fan, thermal throttling only via CPU/GPU/DDR trip points.
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=madkoding/proyector&type=Date)](https://star-history.com/#madkoding/proyector&Date)
