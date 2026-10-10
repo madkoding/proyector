@@ -37,6 +37,10 @@ jobs:
           path: semgrep.sarif
 
   sonar:
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     needs: [semgrep]
     runs-on: ubuntu-latest
     steps:
